@@ -2,11 +2,17 @@ import formSchema from '../formSchema';
 import { useEffect, useState } from 'react';
 
 function Form(props) {
-const { formData, handleChange, errors } = props;
+const { formData, 
+        handleChange, 
+        errors,
+        submit } = props;
 const [ submitDisabled, setSubmitDisabled ] = useState(true)
-const handleSubmit = evt => {
-    evt.preventDefault();
-    console.log('submitted');
+
+const change = (evt) => {
+    const { name, value, type, checked } = evt.target;
+    const valueToUse = type === 'checkbox' ? checked : value;
+    handleChange(name, valueToUse)
+
 }
 
 
@@ -20,7 +26,8 @@ useEffect(() => {
 return (
     <div>
         <h1>Let's get you set up!</h1>
-        <form onSubmit={handleSubmit}>
+        <div className='container'>
+        <form onSubmit={submit}>
         <div className='inputs'>
         <label>
             First name: 
@@ -29,7 +36,7 @@ return (
                 name='fname' 
                 placeholder='first name...' 
                 value={formData.fname}
-                onChange={handleChange} />
+                onChange={change} />
         </label>
         <label>
             Last name: 
@@ -38,7 +45,7 @@ return (
                 name='lname' 
                 placeholder='last name...'
                 value={formData.lname}
-                onChange={handleChange}></input>
+                onChange={change}></input>
         </label>
         <label>Email: 
             <input 
@@ -46,7 +53,7 @@ return (
                 name='email' 
                 placeholder='email...'
                 value={formData.email}
-                onChange={handleChange}
+                onChange={change}
                 />
         </label>
         <label>Password: 
@@ -55,7 +62,7 @@ return (
                 name='password' 
                 placeholder='password...'
                 value={formData.password}
-                onChange={handleChange}
+                onChange={change}
                 />
         </label>
         <div className='agree'>
@@ -63,12 +70,18 @@ return (
                 type='checkbox' 
                 name='agree'
                 checked={formData.agree}
-                onChange={handleChange}
+                onChange={change}
                 />            
             <label htmlFor='agree'>Please agree to our terms of service.</label>
         </div>
         </div>
-        <div className='errors'></div>
+        <div className='errors'> 
+            <div>{errors.fname}</div>
+            <div>{errors.lname}</div>
+            <div>{errors.email}</div>
+            <div>{errors.password}</div>
+            <div>{errors.agree}</div>
+        </div>
         
 
         <input 
@@ -77,6 +90,7 @@ return (
             disabled={submitDisabled}/>
 
         </form>
+        </div>
         </div>
 )
 }
